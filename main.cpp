@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
+#include <unistd.h>
 #include <cstdlib>
+#include <ctime>
 using namespace std;
 
 int maxHealth = 100;
@@ -35,7 +37,7 @@ void refresh(string enemy1 = "0", int enemy1MaxHealth = 0, int enemy1Health = 0,
   }
   if(inBattle == true){
     cout << "Jste v bitvě!\n\n";
-    cout << "1) Útok\t2) Utéct\n";
+    cout << "1) Magický útok\t2) Fyzický útok\t3) Utéct\n";
     cout << "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------\n";
 
     cout << enemy1 << "\t";
@@ -61,7 +63,7 @@ void refresh(string enemy1 = "0", int enemy1MaxHealth = 0, int enemy1Health = 0,
   }
 }
 
-void battle(string enemy1Type, string enemy2Type, string enemy3Type){
+void battle(string enemy1Type = "0", string enemy2Type = "0", string enemy3Type = "0"){
   Enemy enemy1;
   if(enemy1Type == "0"){
     enemy1.maxHealth = 0;
@@ -128,7 +130,69 @@ void battle(string enemy1Type, string enemy2Type, string enemy3Type){
     enemy3.attack = 2;
   }
   inBattle = true;
-  refresh(enemy1Type, enemy1.maxHealth, enemy1.health, enemy2Type, enemy2.maxHealth, enemy2.health, enemy3Type, enemy3.maxHealth, enemy3.health);
+  while(true){
+    refresh(enemy1Type, enemy1.maxHealth, enemy1.health, enemy2Type, enemy2.maxHealth, enemy2.health, enemy3Type, enemy3.maxHealth, enemy3.health);
+    int input;
+    int target;
+    cin >> input;
+    switch (input) {
+    case 1:
+      cout << "Vyberte nepřítele (1-3): ";
+      cin >> target;
+      if (target == 1) {
+        enemy1.health -= 30*attack;
+      }
+      else if (target == 2) {
+        enemy2.health -= 30*attack;
+      }
+      else if (target == 3) {
+        enemy3.health -= 30*attack;
+      }
+      else{
+        cout << "Neplatný výběr";
+        sleep(2);
+        continue;
+      }
+      stamina -= 20;
+      break;
+    case 2:
+      cout << "Vyberte nepřítele (1-3): ";
+      cin >> target;
+      if (target == 1) {
+        enemy1.health -= 30*attack;
+      }
+      else if (target == 2) {
+        if(enemy2Type == "0"){
+            cout << "Nepřítel neexistuje!";
+            sleep(2);
+            continue;
+          }
+        enemy2.health -= 30*attack;
+      }
+      else if (target == 3) {
+        if(enemy3Type == "0"){
+            cout << "Nepřítel neexistuje!";
+            sleep(2);
+            continue;
+          }
+        enemy3.health -= 30*attack;
+      }
+      else{
+        cout << "Neplatný výběr";
+        sleep(2);
+        continue;
+      }
+      mana -= 20;
+      break;
+    case 3:
+      cout << "nuh uh";
+      sleep(2);
+      continue;
+    default:
+      cout << "Neplatná volba";
+      continue;
+    }
+  }
 }
 
 int main()
